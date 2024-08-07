@@ -103,13 +103,13 @@ class YD():
             response = requests.get(load_url,
                                     params={'path':f'Photo_VK/{photo}'},
                                     headers=headers)
-            if response == 201:
+           
+            if response.status_code == 200:
                 url_upload = response.json()['href']
+                requests.put(url_upload, files={'file': url})
             else:
                 continue
-
-            print(response.json())
-            requests.put(url_upload, files={'file': url})
+                       
 
 
 
