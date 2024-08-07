@@ -17,8 +17,16 @@ class VK():
         self.params = {'access_token': self.token, 'v': self.version}
  
     def get_photos(self):
+       
+        while True:
+            try:
+                count = int(input('ВВедите количество фотографий:').strip() or '5')
+                break 
+            except:
+                print('Вводите цифры!')
+ 
         params = self.params
-        params.update({'owner_id':self.id, 'album_id':'profile', 'extended':'extended=1', 'count':6})
+        params.update({'owner_id':self.id, 'album_id':'profile', 'extended':'extended=1', 'count':f'{count}'})
         response = requests.get(f'{self.url_base}/photos.get', params=params)
         response = response.json()['response']['items']
       
@@ -95,9 +103,12 @@ class YD():
             response = requests.get(load_url,
                                     params={'path':f'Photo_VK/{photo}'},
                                     headers=headers)
-            
-            url_upload = response.json()['href']
+            if response == 201:
+                url_upload = response.json()['href']
+            else:
+                continue
 
+            print(response.json())
             requests.put(url_upload, files={'file': url})
 
 
